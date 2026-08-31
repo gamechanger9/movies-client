@@ -1,0 +1,5 @@
+<h2>Edit a Movie</h2>
+
+<app-movies-form [unSelectedGenres]="nonSelectedGenres" [selectedGenres]="selectedGenres"
+ [selectedTheaters]="selectedTheaters" [unSelectedTheaters]="nonSelectedTheaters"
+ [selectedActors]="selectedActors" (postForm)="saveChanges($event)" [model]="model"></app-movies-form>

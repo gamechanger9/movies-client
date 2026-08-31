@@ -1,0 +1,19 @@
+<div class="container">
+    <ul>
+        @for(item of unselectedItems; track $index){
+            <li (click)="select(item, $index)">{{item.description}}</li>
+        }
+    </ul>
+
+    <div class="buttons-div">
+        <button type="button" (click)="selectAll()">Select All</button>
+        <button type="button" (click)="deselectAll()">Deselect All</button>
+    </div>
+
+    <ul>
+        @for(item of selectedItems; track $index){
+            <li (click)="deselect(item, $index)">{{item.description}}</li>
+        }
+    </ul>    
+
+</div>

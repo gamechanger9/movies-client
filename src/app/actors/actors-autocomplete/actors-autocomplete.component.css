@@ -1,0 +1,16 @@
+img {
+    vertical-align: middle;
+    margin-right: 8px;
+    width: 100ox;
+    height: 70px;
+    margin: 8px;
+}
+
+mat-icon {
+    cursor: pointer;
+}
+
+table {
+    margin-bottom: 2rem;
+}
+

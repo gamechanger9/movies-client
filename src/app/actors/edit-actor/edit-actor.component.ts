@@ -1,0 +1,29 @@
+import {
+  Component,
+  Input,
+  numberAttribute,
+} from '@angular/core';
+import { ActorsFormComponent } from '../actors-form/actors-form.component';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { DisplayErrorsComponent } from '../../shared/components/display-errors/display-errors.component';
+import { EditEntityComponent } from "../../shared/components/edit-entity/edit-entity.component";
+import { CRUD_SERVICE_TOKEN } from '../../shared/providers/providers';
+import { ActorsService } from '../actors.service';
+
+@Component({
+  selector: 'app-edit-actor',
+  imports: [EditEntityComponent],
+  templateUrl: './edit-actor.component.html',
+  styleUrl: './edit-actor.component.css',
+  providers: [
+    {
+      provide: CRUD_SERVICE_TOKEN,
+      useClass: ActorsService,
+    }
+  ]
+})
+export class EditActorComponent{
+  @Input({ transform: numberAttribute })
+  id!: number;
+  actorsForm = ActorsFormComponent;
+}

@@ -1,0 +1,39 @@
+<form [formGroup]="form" (submit)="saveChanges()">
+    <mat-form-field appearance="outline">
+        <mat-label>Title</mat-label>
+        <input matInput [formControl]="form.controls.title" />
+        <mat-error>{{getErrorMessageForTitle()}}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Release Date</mat-label>
+        <mat-datepicker #releaseDate></mat-datepicker>
+        <input matInput [matDatepicker]="releaseDate" [formControl]="form.controls.releaseDate" />
+        <mat-datepicker-toggle matSuffix [for]="releaseDate"></mat-datepicker-toggle>
+        <mat-error>{{getErrorMessageForReleaseDate()}}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Trailer Link</mat-label>
+        <input matInput [formControl]="form.controls.trailer" />
+    </mat-form-field>
+
+    <app-input-img title="Movie Poster" [imageURL]="model?.poster" (uploadedImage)="handleFileSelection($event)"></app-input-img>
+
+    <h4>Select The Genres</h4>
+
+    <app-multiple-selector [selectedItems]="selectedGenres" [unselectedItems]="unSelectedGenres"></app-multiple-selector>
+
+    <h4>Select The Theaters</h4>
+
+    <app-multiple-selector [selectedItems]="selectedTheaters" [unselectedItems]="unSelectedTheaters"></app-multiple-selector>
+
+    <app-actors-autocomplete [selectedActors]="selectedActors"></app-actors-autocomplete>
+
+
+    <div class="buttons-container">
+        <button [disabled]="form.invalid" mat-flat-button type="submit">Save Changes</button>
+        <a routerLink="/movies" mat-stroked-button>Cancel</a>
+    </div>
+
+</form>

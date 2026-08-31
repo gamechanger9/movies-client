@@ -1,0 +1,25 @@
+@use "@angular/material" as mat;
+@import "@angular/material/prebuilt-themes/azure-blue.css";
+.primary {
+    @include mat.theme (
+        (
+            color: mat.$azure-palette
+        )
+    )
+}
+
+.secondary {
+    @include mat.theme (
+        (
+            color: mat.$magenta-palette
+        )
+    )
+}
+
+.warn {
+    @include mat.theme (
+        (
+            color: mat.$red-palette
+        )
+    )
+}
