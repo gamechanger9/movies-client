@@ -1,45 +1,61 @@
-import { Component, Input , numberAttribute } from '@angular/core';
+import { Component, inject, Input , numberAttribute, OnInit } from '@angular/core';
 import { MoviesFormComponent } from '../movies-form/movies-form.component';
-import { MoviesCreationDTO, MoviesDTO } from '../movies.model';
+import { MovieCreationDTO, MovieDTO } from '../movies.model';
 import { MultipleSelectorDTO } from '../../shared/components/multiple-selector/multiple-selector.models';
 import { ActorAutoCompleteDTO } from '../../actors/actors.models';
+import { MoviesService } from '../movies.service';
+import { extractErrors } from '../../shared/components/functions/extractErrors';
+import { Router } from '@angular/router';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-edit-movie',
-  imports: [MoviesFormComponent],
+  imports: [MoviesFormComponent, LoadingComponent],
   templateUrl: './edit-movie.component.html',
   styleUrl: './edit-movie.component.css'
 })
-export class EditMovieComponent {
+export class EditMovieComponent implements OnInit {
+
+  ngOnInit(): void {
+    this.moviesService.putGet(this.id).subscribe(response => {
+      this.model = response.movie;
+      this.selectedGenres = response.selectedGenres.map(genre => {
+        return <MultipleSelectorDTO>{ key: genre.id, description: genre.name }
+      });
+      this.nonSelectedGenres = response.nonSelectedGenres.map(genre => {
+        return <MultipleSelectorDTO>{ key: genre.id, description: genre.name }
+      });
+      this.selectedTheaters = response.selectedTheaters.map(theater => {
+        return <MultipleSelectorDTO>{ key: theater.id, description: theater.name }
+      });
+      this.nonSelectedTheaters = response.nonSelectedTheaters.map(theater => {
+        return <MultipleSelectorDTO>{ key: theater.id, description: theater.name }
+      });
+      this.selectedActors = response.actors;
+    });
+  }
+
   @Input({transform: numberAttribute})
   id!: number;
+  model?: MovieDTO;
+  nonSelectedGenres: MultipleSelectorDTO[] = []
+  selectedGenres: MultipleSelectorDTO[] = []
+  nonSelectedTheaters: MultipleSelectorDTO[] = []
+  selectedTheaters: MultipleSelectorDTO[] = []
+  selectedActors: ActorAutoCompleteDTO[] = []
+  moviesService = inject(MoviesService);
+  router = inject(Router);
+  errors: string[] = [];
 
-
-  nonSelectedGenres: MultipleSelectorDTO[] = [
-    {key: 1, description: 'Drama'},
-    {key: 3, description: 'Action'}
-  ]
-
-  selectedGenres: MultipleSelectorDTO[] = [
-    {key: 2, description: 'Comedy'}
-  ]
-
-  nonSelectedTheaters: MultipleSelectorDTO[] = [
-    {key: 1, description: 'Nueplex'},
-    {key: 3, description: 'Atrium'}
-  ]
-
-  selectedTheaters: MultipleSelectorDTO[] = [
-    {key: 2, description: 'Bahria'}
-  ]
-
-  selectedActors: ActorAutoCompleteDTO[] = [
-    {id: 1, name: 'Tom Holland', character: 'Peter Parker', picture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Tom_Holland_by_Gage_Skidmore.jpg/330px-Tom_Holland_by_Gage_Skidmore.jpg'},
-  ]
-
-
-  model: MoviesDTO = {id: 1, title: 'Spiderman', releaseDate: new Date("2026-5-5"), trailer: 'www.trailer.com', poster: 'https://upload.wikimedia.org/wikipedia/en/thumb/0/00/Spider-Man_No_Way_Home_poster.jpg/250px-Spider-Man_No_Way_Home_poster.jpg' };
-  saveChanges(movie: MoviesCreationDTO){
-    console.log('editing a movie', movie);
+  saveChanges(movie: MovieCreationDTO){
+    this.moviesService.update(this.id, movie).subscribe({
+      next: () => {
+        this.router.navigate(['/']);
+      },
+      error: err => {
+        const errors = extractErrors(err);
+        this.errors = errors;
+      }
+    })
   }
 }

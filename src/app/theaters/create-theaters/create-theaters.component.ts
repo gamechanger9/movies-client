@@ -1,15 +1,22 @@
 import { Component } from '@angular/core';
-import { TheaterCreationDTO } from '../theaters.model';
 import { TheatersFormComponent } from "../theaters-form/theaters-form.component";
+import { TheatersService } from '../theaters.service';
+import { CRUD_SERVICE_TOKEN } from '../../shared/providers/providers';
+import { CreateEntityComponent } from "../../shared/components/create-entity/create-entity.component";
 
 @Component({
   selector: 'app-create-theaters',
-  imports: [TheatersFormComponent],
+  imports: [CreateEntityComponent],
   templateUrl: './create-theaters.component.html',
-  styleUrl: './create-theaters.component.css'
+  styleUrl: './create-theaters.component.css',
+  providers: [
+    {
+      provide: CRUD_SERVICE_TOKEN,
+      useClass: TheatersService,
+    }
+  ]
 })
 export class CreateTheatersComponent {
-  saveChanges(theater: TheaterCreationDTO){
-    console.log(theater);
-  }
+
+  theatersForm = TheatersFormComponent;
 }

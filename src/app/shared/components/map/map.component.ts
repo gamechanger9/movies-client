@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { icon, latLng, LeafletMouseEvent, Marker, tileLayer } from 'leaflet';
+import { icon, latLng, LeafletMouseEvent, marker, Marker, tileLayer } from 'leaflet';
 import { LeafletModule } from '@bluehalo/ngx-leaflet'
 import { Coordinate } from './coordinate.model';
 
@@ -12,6 +12,9 @@ import { Coordinate } from './coordinate.model';
 export class MapComponent implements OnInit {
   @Input()
   initialCoordinates: Coordinate[] = []; 
+
+  @Input()
+  readOnlyMode: boolean = false;
 
   @Output()
   coordinateSelected = new EventEmitter<Coordinate>();
@@ -36,12 +39,28 @@ export class MapComponent implements OnInit {
   layers: Marker<any>[] = [];
 
   ngOnInit(): void {
-    this.layers = this.initialCoordinates.map(value => 
-      new Marker([value.latitude, value.longitude], this.markerOptions)
-    );
+    if(this.initialCoordinates.length > 0){
+      const first = this.initialCoordinates[0];
+      this.options.center = latLng(first.latitude, first.longitude);
+    }
+
+    this.layers = this.initialCoordinates.map(value => {
+
+      const myMarker = marker([value.latitude, value.longitude], this.markerOptions);
+
+      if(value.text){
+        myMarker.bindPopup(value.text, {autoClose: false, autoPan: false});
+      }
+      return myMarker;
+    });
   }
 
   handleClick(event: LeafletMouseEvent){
+
+    if(this.readOnlyMode){
+      return;
+    }
+
     const latitude = event.latlng.lat;
     const longitude = event.latlng.lng;
     console.log(latitude, longitude);
