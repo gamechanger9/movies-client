@@ -2,10 +2,10 @@ import { inject, Injectable } from '@angular/core';
 import { GenreCreationDTO, GenreDTO } from './genres.models';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment.development';
 import { PaginationDTO } from '../shared/models/paginationDTO';
 import { buildQueryParams } from '../shared/components/functions/buildQueryParams';
 import { ICRUDService } from '../shared/interfaces/ICRUDService';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
