@@ -12,7 +12,7 @@ import { GenericListComponent } from '../../shared/components/generic-list/gener
 
 @Component({
   selector: 'app-index-users',
-  imports: [RouterLink, MatButtonModule, MatTableModule, MatPaginator, GenericListComponent],
+  imports: [MatButtonModule, MatTableModule, MatPaginator, GenericListComponent],
   templateUrl: './index-users.component.html',
   styleUrl: './index-users.component.css',
 })
