@@ -1,14 +1,14 @@
 <h2>Create a Movie</h2>
 
-@if(nonSelectedGenres.length > 0){
-   <app-movies-form 
-    [selectedGenres]="selectedGenres" 
-    [unSelectedGenres]="nonSelectedGenres" 
-    [selectedTheaters]="selectedTheaters" 
-    [unSelectedTheaters]="nonSelectedTheaters" 
-    [selectedActors]="selectedActors" 
-    (postForm)="saveChanges($event)"></app-movies-form> 
-}
-@else {
-    <app-loading></app-loading>
+@if (loaded) {
+  <app-movies-form
+    [selectedGenres]="selectedGenres"
+    [unSelectedGenres]="nonSelectedGenres"
+    [selectedTheaters]="selectedTheaters"
+    [unSelectedTheaters]="nonSelectedTheaters"
+    [selectedActors]="selectedActors"
+    (postForm)="saveChanges($event)"
+  ></app-movies-form>
+} @else {
+  <app-loading></app-loading>
 }

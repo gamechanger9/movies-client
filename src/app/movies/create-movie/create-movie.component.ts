@@ -12,44 +12,48 @@ import { LoadingComponent } from '../../shared/components/loading/loading.compon
   selector: 'app-create-movie',
   imports: [MoviesFormComponent, LoadingComponent],
   templateUrl: './create-movie.component.html',
-  styleUrl: './create-movie.component.css'
+  styleUrl: './create-movie.component.css',
 })
 export class CreateMovieComponent {
+  nonSelectedGenres: MultipleSelectorDTO[] = [];
 
-  nonSelectedGenres: MultipleSelectorDTO[] = []
+  selectedGenres: MultipleSelectorDTO[] = [];
 
-  selectedGenres: MultipleSelectorDTO[] = []
-
-  nonSelectedTheaters: MultipleSelectorDTO[] = []
+  nonSelectedTheaters: MultipleSelectorDTO[] = [];
 
   selectedTheaters: MultipleSelectorDTO[] = [];
 
   selectedActors: ActorAutoCompleteDTO[] = [];
 
   moviesService = inject(MoviesService);
+  loaded = false;
   errors: string[] = [];
   router = inject(Router);
 
   constructor() {
-    this.moviesService.postGet().subscribe(model => {
-      this.nonSelectedGenres = model.genres.map(genre => {
-        return <MultipleSelectorDTO>{ key: genre.id, description: genre.name }
+    this.moviesService.postGet().subscribe((model) => {
+      this.loaded = true;
+      this.nonSelectedGenres = model.genres.map((genre) => {
+        return <MultipleSelectorDTO>{ key: genre.id, description: genre.name };
       });
-      this.nonSelectedTheaters = model.theaters.map(theater => {
-        return <MultipleSelectorDTO>{ key: theater.id, description: theater.name }
+      this.nonSelectedTheaters = model.theaters.map((theater) => {
+        return <MultipleSelectorDTO>{
+          key: theater.id,
+          description: theater.name,
+        };
       });
     });
   }
 
-  saveChanges(movie: MovieCreationDTO){
+  saveChanges(movie: MovieCreationDTO) {
     this.moviesService.create(movie).subscribe({
       next: () => {
         this.router.navigate(['/']);
       },
-      error: err => {
+      error: (err) => {
         const errors = extractErrors(err);
         this.errors = errors;
-      }
-    })
+      },
+    });
   }
 }
