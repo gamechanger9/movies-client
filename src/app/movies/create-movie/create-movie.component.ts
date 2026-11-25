@@ -5,7 +5,7 @@ import { MovieCreationDTO } from '../movies.model';
 import { MultipleSelectorDTO } from '../../shared/components/multiple-selector/multiple-selector.models';
 import { ActorAutoCompleteDTO } from '../../actors/actors.models';
 import { MoviesService } from '../movies.service';
-import { extractErrors } from '../../shared/components/functions/extractErrors';
+import { extractErrors } from '../../shared/functions/extractErrors';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 
 @Component({

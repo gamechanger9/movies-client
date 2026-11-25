@@ -1,10 +1,14 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { ActorAutoCompleteDTO, ActorCreationDTO, ActorDTO } from './actors.models';
+import {
+  ActorAutoCompleteDTO,
+  ActorCreationDTO,
+  ActorDTO,
+} from './actors.models';
 import { Observable } from 'rxjs';
 import { PaginationDTO } from '../shared/models/paginationDTO';
-import { buildQueryParams } from '../shared/components/functions/buildQueryParams';
+import { buildQueryParams } from '../shared/functions/buildQueryParams';
 import { ICRUDService } from '../shared/interfaces/ICRUDService';
 
 @Injectable({

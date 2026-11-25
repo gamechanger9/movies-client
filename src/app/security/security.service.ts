@@ -1,57 +1,75 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { AuthenticationResponseDTO, UserCredentialsDTO, UserDTO } from './security.models';
+import {
+  AuthenticationResponseDTO,
+  UserCredentialsDTO,
+  UserDTO,
+} from './security.models';
 import { Observable, tap } from 'rxjs';
 import { PaginationDTO } from '../shared/models/paginationDTO';
-import { buildQueryParams } from '../shared/components/functions/buildQueryParams';
+import { buildQueryParams } from '../shared/functions/buildQueryParams';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SecurityService {
-
-  constructor() { }
+  constructor() {}
 
   private http = inject(HttpClient);
   private baseURL = environment.apiURL + '/users';
   private readonly keyToken = 'token';
   private readonly keyExpiration = 'token-expiration';
 
-  register(userCredentials: UserCredentialsDTO): Observable<AuthenticationResponseDTO> {
-    return this.http.post<AuthenticationResponseDTO>(`${this.baseURL}/register`, userCredentials)
-    .pipe(
-      tap(authenticationResponse => {
-        this.storeToken(authenticationResponse);
-      })
-    );
+  register(
+    userCredentials: UserCredentialsDTO,
+  ): Observable<AuthenticationResponseDTO> {
+    return this.http
+      .post<AuthenticationResponseDTO>(
+        `${this.baseURL}/register`,
+        userCredentials,
+      )
+      .pipe(
+        tap((authenticationResponse) => {
+          this.storeToken(authenticationResponse);
+        }),
+      );
   }
 
-  login(userCredentials: UserCredentialsDTO): Observable<AuthenticationResponseDTO> {
-    return this.http.post<AuthenticationResponseDTO>(`${this.baseURL}/login`, userCredentials)
-    .pipe(
-      tap(authenticationResponse => {
-        this.storeToken(authenticationResponse);
-      })
-    );
+  login(
+    userCredentials: UserCredentialsDTO,
+  ): Observable<AuthenticationResponseDTO> {
+    return this.http
+      .post<AuthenticationResponseDTO>(`${this.baseURL}/login`, userCredentials)
+      .pipe(
+        tap((authenticationResponse) => {
+          this.storeToken(authenticationResponse);
+        }),
+      );
   }
 
-  makeAdmin(email: string){
-    return this.http.post(`${this.baseURL}/makeAdmin`, {email});
+  makeAdmin(email: string) {
+    return this.http.post(`${this.baseURL}/makeAdmin`, { email });
   }
 
-  removeAdmin(email: string){
-    return this.http.post(`${this.baseURL}/removeAdmin`, {email});
+  removeAdmin(email: string) {
+    return this.http.post(`${this.baseURL}/removeAdmin`, { email });
   }
 
-  getUsers(pagination: PaginationDTO): Observable<HttpResponse<UserDTO[]>>{
+  getUsers(pagination: PaginationDTO): Observable<HttpResponse<UserDTO[]>> {
     let queryParams = buildQueryParams(pagination);
-    return this.http.get<UserDTO[]>(`${this.baseURL}/usersList`, {params: queryParams, observe: 'response'});
+    return this.http.get<UserDTO[]>(`${this.baseURL}/usersList`, {
+      params: queryParams,
+      observe: 'response',
+    });
   }
 
   storeToken(authenticationResponse: AuthenticationResponseDTO): void {
     localStorage.setItem(this.keyToken, authenticationResponse.token);
-    localStorage.setItem(this.keyExpiration, new Date(authenticationResponse.expiration).toISOString());
+    localStorage.setItem(
+      this.keyExpiration,
+      new Date(authenticationResponse.expiration).toISOString(),
+    );
   }
 
   getJWTToken(): string | null {
@@ -60,16 +78,16 @@ export class SecurityService {
 
   isLoggedIn(): boolean {
     const token = this.getJWTToken();
-    if(!token){
+    if (!token) {
       return false;
     }
     const expiration = localStorage.getItem(this.keyExpiration)!;
     const expirationDate = new Date(expiration);
 
-    if(expirationDate <= new Date()){
+    if (expirationDate <= new Date()) {
       this.logout();
       return false;
-    } 
+    }
     return true;
   }
 
@@ -80,18 +98,18 @@ export class SecurityService {
 
   getRole(): string {
     const isAdmin = this.getJWTClaim('isadmin');
-    if(isAdmin){
+    if (isAdmin) {
       return 'admin';
     }
     return '';
   }
 
   getJWTClaim(field: string): string {
-    const token = this.getJWTToken();  
-    if(!token){
+    const token = this.getJWTToken();
+    if (!token) {
       return '';
     }
-    
+
     const dataToken = JSON.parse(atob(token.split('.')[1]));
     return dataToken[field];
   }

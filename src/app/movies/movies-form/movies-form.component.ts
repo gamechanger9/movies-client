@@ -18,7 +18,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { InputImgComponent } from '../../shared/input-img/input-img.component';
-import { dateCannotBeInThePast } from '../../shared/components/functions/validations';
+import { dateCannotBeInThePast } from '../../shared/functions/validations';
 import { MovieCreationDTO, MovieDTO } from '../movies.model';
 import moment from 'moment';
 import { MultipleSelectorComponent } from '../../shared/components/multiple-selector/multiple-selector.component';

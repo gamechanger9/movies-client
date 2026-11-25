@@ -1,5 +1,17 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActorCreationDTO, ActorDTO } from '../actors.models';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,24 +19,33 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import moment from 'moment';
-import { dateCannotBeInTheFuture } from '../../shared/components/functions/validations';
-import { InputImgComponent } from "../../shared/input-img/input-img.component";
+import { dateCannotBeInTheFuture } from '../../shared/functions/validations';
+import { InputImgComponent } from '../../shared/input-img/input-img.component';
 
 @Component({
   selector: 'app-actors-form',
-  imports: [MatButtonModule, ReactiveFormsModule, RouterLink, MatFormFieldModule, MatInputModule, MatDatepickerModule, InputImgComponent],
+  imports: [
+    MatButtonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    InputImgComponent,
+  ],
   templateUrl: './actors-form.component.html',
-  styleUrl: './actors-form.component.css'
+  styleUrl: './actors-form.component.css',
 })
 export class ActorsFormComponent implements OnInit {
-
   private formBuilder = inject(FormBuilder);
 
   form = this.formBuilder.group({
-    name: ['', {validators: [Validators.required]}],
-    dateOfBirth: new FormControl<Date | null>(null, {validators: [Validators.required, dateCannotBeInTheFuture()]}),
-    picture: new FormControl<null | File | string>(null)
-  })
+    name: ['', { validators: [Validators.required] }],
+    dateOfBirth: new FormControl<Date | null>(null, {
+      validators: [Validators.required, dateCannotBeInTheFuture()],
+    }),
+    picture: new FormControl<null | File | string>(null),
+  });
 
   @Input()
   model?: ActorDTO;
@@ -33,47 +54,46 @@ export class ActorsFormComponent implements OnInit {
   postForm = new EventEmitter<ActorCreationDTO>();
 
   ngOnInit(): void {
-    if (this.model !== undefined){
+    if (this.model !== undefined) {
       this.form.patchValue(this.model);
     }
   }
 
-  getErrorMessagesForName() : string {
+  getErrorMessagesForName(): string {
     let field = this.form.controls.name;
-    
-    if (field.hasError('required')){
+
+    if (field.hasError('required')) {
       return 'The Name field is required';
     }
 
     return '';
   }
 
-   getErrorMessagesForDOB() : string {
+  getErrorMessagesForDOB(): string {
     let field = this.form.controls.dateOfBirth;
 
-    if (field.hasError('required')){
+    if (field.hasError('required')) {
       return 'The date of birth field is required';
     }
-    
-    if (field.hasError('dateCannotBeInTheFuture')){
+
+    if (field.hasError('dateCannotBeInTheFuture')) {
       return field.getError('dateCannotBeInTheFuture').message;
     }
 
     return '';
   }
 
-  handleFileSelection(file: File){
+  handleFileSelection(file: File) {
     this.form.controls.picture.setValue(file);
   }
 
-  saveChanges(){
+  saveChanges() {
     const actor = this.form.value as ActorCreationDTO;
     actor.dateOfBirth = moment(actor.dateOfBirth).toDate();
 
-    if(typeof actor.picture === 'string'){
+    if (typeof actor.picture === 'string') {
       actor.picture = undefined;
     }
     this.postForm.emit(actor);
   }
-
 }

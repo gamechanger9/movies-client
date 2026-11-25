@@ -5,7 +5,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PaginationDTO } from '../shared/models/paginationDTO';
 import { environment } from '../../environments/environment';
-import { buildQueryParams } from '../shared/components/functions/buildQueryParams';
+import { buildQueryParams } from '../shared/functions/buildQueryParams';
 
 @Injectable({
   providedIn: 'root',

@@ -82,8 +82,8 @@ export class IndexEntitiesComponent<TDTO, TCreationDTO> {
         });
         this.CRUDService.delete(id).subscribe({
           next: () => {
-            this.loadRecords();
             this.pagination.page = 1;
+            this.loadRecords();
           },
         });
       }

@@ -3,41 +3,45 @@ import { GenreCreationDTO, GenreDTO } from './genres.models';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PaginationDTO } from '../shared/models/paginationDTO';
-import { buildQueryParams } from '../shared/components/functions/buildQueryParams';
+import { buildQueryParams } from '../shared/functions/buildQueryParams';
 import { ICRUDService } from '../shared/interfaces/ICRUDService';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GenresService implements ICRUDService<GenreDTO, GenreCreationDTO> {
-
-  constructor() { }
+  constructor() {}
   private http = inject(HttpClient);
-  private baseURL = environment.apiURL + '/genres'
+  private baseURL = environment.apiURL + '/genres';
 
-  public getPaginated(pagination: PaginationDTO): Observable<HttpResponse<GenreDTO[]>> {
+  public getPaginated(
+    pagination: PaginationDTO,
+  ): Observable<HttpResponse<GenreDTO[]>> {
     let queryParams = buildQueryParams(pagination);
-    return this.http.get<GenreDTO[]>(this.baseURL, { params: queryParams, observe: 'response' });
+    return this.http.get<GenreDTO[]>(this.baseURL, {
+      params: queryParams,
+      observe: 'response',
+    });
   }
 
   public getAll(): Observable<GenreDTO[]> {
     return this.http.get<GenreDTO[]>(`${this.baseURL}/all`);
   }
 
-  public create(genre: GenreCreationDTO){
+  public create(genre: GenreCreationDTO) {
     return this.http.post(this.baseURL, genre);
   }
 
-  public getById(id: number): Observable<GenreDTO>{
+  public getById(id: number): Observable<GenreDTO> {
     return this.http.get<GenreDTO>(`${this.baseURL}/${id}`);
   }
 
-  public update(id: number, genre: GenreCreationDTO){
+  public update(id: number, genre: GenreCreationDTO) {
     return this.http.put(`${this.baseURL}/${id}`, genre);
   }
 
-  public delete(id: number){
+  public delete(id: number) {
     return this.http.delete(`${this.baseURL}/${id}`);
-  } 
+  }
 }

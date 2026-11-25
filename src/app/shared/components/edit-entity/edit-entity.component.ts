@@ -11,7 +11,7 @@ import { LoadingComponent } from '../loading/loading.component';
 import { DisplayErrorsComponent } from '../display-errors/display-errors.component';
 import { CRUD_SERVICE_TOKEN } from '../../providers/providers';
 import * as ICRUDService from '../../interfaces/ICRUDService';
-import { extractErrors } from '../functions/extractErrors';
+import { extractErrors } from '../../functions/extractErrors';
 import { Router } from '@angular/router';
 
 @Component({
@@ -46,7 +46,7 @@ export class EditEntityComponent<TDTO, TCreationDTO> implements OnInit {
   private componentRef!: ComponentRef<any>;
 
   ngOnInit(): void {
-    this.CRUDService.getById(this.id).subscribe(entity => {
+    this.CRUDService.getById(this.id).subscribe((entity) => {
       this.loadComponent(entity);
     });
   }
